@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="cms_article")
 public class Article {
@@ -19,14 +21,15 @@ public class Article {
 	private String author;
 	private int clickTimes;
 	private String content;
-	private Date publisDate;
+	private Date publishDate;
 	private String title;
 	
 	//外键
 	//多个文章对应一个栏目
 	@ManyToOne
-	@JoinColumn(name="categoty_id")
-	//一个文章对应一个栏目，所以有
+	@JoinColumn(name="category_id")
+	//一个文章对应一个栏目，所以要注入category
+	@JsonIgnore		//忽略转成json数据
 	private Category category;
 	
 	public Article() {
@@ -39,7 +42,7 @@ public class Article {
 		this.author = author;
 		this.clickTimes = clickTimes;
 		this.content = content;
-		this.publisDate = publisDate;
+		this.publishDate = publishDate;
 		this.title = title;
 	}
 
@@ -76,11 +79,11 @@ public class Article {
 	}
 
 	public Date getPublisDate() {
-		return publisDate;
+		return publishDate;
 	}
 
 	public void setPublisDate(Date publisDate) {
-		this.publisDate = publisDate;
+		this.publishDate = publisDate;
 	}
 
 	public String getTitle() {
@@ -102,7 +105,7 @@ public class Article {
 	@Override
 	public String toString() {
 		return "Article [id=" + id + ", author=" + author + ", clickTimes=" + clickTimes + ", content=" + content
-				+ ", publisDate=" + publisDate + ", title=" + title + "]";
+				+ ", publisDate=" + publishDate + ", title=" + title + "]";
 	}
 	
 	
