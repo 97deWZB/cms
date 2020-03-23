@@ -1,5 +1,6 @@
 package com.briup.web;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.briup.bean.Article;
+import com.briup.bean.ArticleCategory;
 import com.briup.bean.Category;
 import com.briup.service.IArticleService;
 import com.briup.utils.Message;
@@ -38,7 +40,7 @@ public class ArticlerController {
 		@ApiImplicitParam(name="author",value="作者",paramType="query",dataType="string"),
 		@ApiImplicitParam(name="categoryId",value="栏目id",paramType="query",dataType="string")
 	})
-	public Message<String> saveOrUpdate(Integer id,String title,String author,Integer categoryId,String content){
+	public Message<String> saveOrUpdate(Integer id,String title,String author,Integer categoryId,String content /*Article article*/){
 		Message<String> message = null;
 		try {
 			//与categoryController不同，这里新建的article里没有categoryId参数，所以有参构造器不需要变
@@ -78,11 +80,13 @@ public class ArticlerController {
 	
 	@GetMapping("/findById")
 	@ApiImplicitParam(name="id",value="文章id",paramType="query",dataType="int",required = true)
-	public Message<Article> findById(int id) {
-		Message<Article> message = null;
+	public Message<ArticleCategory> findById(int id) {
+		Message<ArticleCategory> message = null;
 		try {
 			Article article = articleservice.findById(id);
-			message = MessageUtil.success(article);
+			ArticleCategory ac = new ArticleCategory(article.getId(), article.getAuthor(),article.getClickTimes(),article.getContent(),article.getPublisDate(), article.getTitle(),article.getCategory().getName());
+			
+			message = MessageUtil.success(ac);
 		} catch (Exception e) {
 			message = MessageUtil.error(500, e.getMessage());
 		}
@@ -93,10 +97,21 @@ public class ArticlerController {
 	
 	@GetMapping("/findAll")
 	@ApiOperation("查询所有文章信息")
-	public Message<List<Article>> findAll(){
+	public Message<List<ArticleCategory>> findAll(){
+		//返回的泛型应该是包装类
+		
 		List<Article> articlelist = articleservice.findAll();
-		return MessageUtil.success(articlelist);
+		
+		List<ArticleCategory> acList = new ArrayList<ArticleCategory>();
+		
+		for(Article a:articlelist) {
+			ArticleCategory ac = new ArticleCategory(a.getId(), a.getAuthor(), a.getClickTimes(), a.getContent(), a.getPublisDate(), a.getTitle(), a.getCategory().getName());
+			
+			acList.add(ac);
+		}
+		return MessageUtil.success(acList);
 	}
+	
 	
 	@DeleteMapping("/deleteById")
 	@ApiOperation("根据id删除文章")

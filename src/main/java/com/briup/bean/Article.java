@@ -29,7 +29,7 @@ public class Article {
 	@ManyToOne
 	@JoinColumn(name="category_id")
 	//一个文章对应一个栏目，所以要注入category
-	@JsonIgnore		//忽略转成json数据
+	//@JsonIgnore		//忽略转成json数据
 	private Category category;
 	
 	public Article() {

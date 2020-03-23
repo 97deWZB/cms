@@ -23,13 +23,13 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(value="栏目id")
 	private Integer id;
-	@ApiModelProperty(value="栏目编码",required = true)
+	@ApiModelProperty(value="栏目编码")
 	private long code;
-	@ApiModelProperty(value="栏目名称",required =true)
+	@ApiModelProperty(value="栏目名称")
 	private String name;
 	
-	@OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
-	private List<Article> articles;
+//	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//	private List<Article> articles;
 	
 	public Category(long code, String name) {
 		super();
@@ -72,13 +72,13 @@ public class Category {
 		this.name = name;
 	}
 
-	public List<Article> getArticles() {
-		return articles;
-	}
-
-	public void setArticles(List<Article> articles) {
-		this.articles = articles;
-	}
+//	public List<Article> getArticles() {
+//		return articles;
+//	}
+//
+//	public void setArticles(List<Article> articles) {
+//		this.articles = articles;
+//	}
 	@Override
 	public String toString() {
 		return "Category [id=" + id + ", code=" + code + ", name=" + name + "]";
