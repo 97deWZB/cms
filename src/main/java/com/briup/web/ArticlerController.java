@@ -1,7 +1,6 @@
 package com.briup.web;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.briup.bean.Article;
 import com.briup.bean.ArticleCategory;
-import com.briup.bean.Category;
 import com.briup.service.IArticleService;
 import com.briup.utils.Message;
 import com.briup.utils.MessageUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -33,20 +30,19 @@ public class ArticlerController {
 	
 	@PutMapping("/saveOrUpdate")
 	//对swagger页面的 选项框的说明
-	@ApiOperation("/保存或更新一个文章")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name="id",value="文章id",paramType="query",dataType="int"),
-		@ApiImplicitParam(name="title",value="文章标题",paramType="query",dataType="string"),
-		@ApiImplicitParam(name="author",value="作者",paramType="query",dataType="string"),
-		@ApiImplicitParam(name="categoryId",value="栏目id",paramType="query",dataType="string")
-	})
-	public Message<String> saveOrUpdate(Integer id,String title,String author,Integer categoryId,String content /*Article article*/){
+	@ApiOperation(value = "/保存或更新一个文章",notes ="category.code,category.name可以不填")
+	public Message<String> saveOrUpdate(/*Integer id,String title,String author,Integer categoryId,String content */Article article){
 		Message<String> message = null;
+		
 		try {
 			//与categoryController不同，这里新建的article里没有categoryId参数，所以有参构造器不需要变
-			//这个article只有id,title,author,content,publisdate这几个类
+			//这个article只有id,title,author,content,publishdate这几个类
 			
+	
 			
+	/*
+	 * 
+	 * 
 			//web层的controller接受数据，id title author category content date
 			//将收到的数据放在新建的article中
 			Article article = new Article();
@@ -65,9 +61,13 @@ public class ArticlerController {
 			//将	categoryId作为参数放到category类的id里
 			category.setId(categoryId);
 			
+			
 			//article中注入了category类，再把有categoryId作为id值的category设置到article中了。
 			article.setCategory(category);
-			
+	*	
+	*
+	*
+	*/
 			//调用service方法，将article保存进
 			articleservice.saveOrUpdate(article);
 			
@@ -79,12 +79,13 @@ public class ArticlerController {
 	}
 	
 	@GetMapping("/findById")
+	@ApiOperation("根据id查询")
 	@ApiImplicitParam(name="id",value="文章id",paramType="query",dataType="int",required = true)
 	public Message<ArticleCategory> findById(int id) {
 		Message<ArticleCategory> message = null;
 		try {
 			Article article = articleservice.findById(id);
-			ArticleCategory ac = new ArticleCategory(article.getId(), article.getAuthor(),article.getClickTimes(),article.getContent(),article.getPublisDate(), article.getTitle(),article.getCategory().getName());
+			ArticleCategory ac = new ArticleCategory(article.getId(), article.getAuthor(),article.getClickTimes(),article.getContent(),article.getPublishDate(), article.getTitle(),article.getCategory().getName());
 			
 			message = MessageUtil.success(ac);
 		} catch (Exception e) {
@@ -105,7 +106,7 @@ public class ArticlerController {
 		List<ArticleCategory> acList = new ArrayList<ArticleCategory>();
 		
 		for(Article a:articlelist) {
-			ArticleCategory ac = new ArticleCategory(a.getId(), a.getAuthor(), a.getClickTimes(), a.getContent(), a.getPublisDate(), a.getTitle(), a.getCategory().getName());
+			ArticleCategory ac = new ArticleCategory(a.getId(), a.getAuthor(), a.getClickTimes(), a.getContent(), a.getPublishDate(), a.getTitle(), a.getCategory().getName());
 			
 			acList.add(ac);
 		}

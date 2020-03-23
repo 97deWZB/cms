@@ -3,9 +3,7 @@ package com.briup.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.aop.ThrowsAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.MergedAnnotation.Adapt;
 import org.springframework.stereotype.Service;
 
 import com.briup.bean.Article;
@@ -31,6 +29,8 @@ public class ArticleServiceImpl implements IArticleService{
 				Article article_db = articleDao.findById(id).get();
 				String author = article.getAuthor();
 				String title = article.getTitle();
+				String content = article.getContent();
+				
 				Category category = article.getCategory();
 				if (article!=null) {
 					article_db.setAuthor(author);
@@ -41,16 +41,27 @@ public class ArticleServiceImpl implements IArticleService{
 				if (author!=null) {
 					article_db.setAuthor(author);
 				}
-				if (category.getId()!=null) {
+				
+					
+/*				if (category.getId()!=null) {
 					//这个category是自己在controller里创建的，不会为空，
 					//但在swaggger里填的id是categotyId,不填的话可以取到空值
 					//所以用category.getId()
 					article.setCategory(category);
 				}
+				
+*/
+				if (category!=null) {
+					article_db.setCategory(category);
+				}
+				if (content!=null) {
+					article_db.setContent(content);
+				}
+				
 				articleDao.save(article_db);
 			}
 		}else {
-			throw new Exception();
+			throw new Exception("参数为空");
 		}
 	}
 
